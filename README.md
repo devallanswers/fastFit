@@ -97,3 +97,6 @@ Adicione aqui capturas das principais telas para apresentar o projeto no GitHub.
 ## Status
 
 Projeto finalizado, criado para estudo, demonstracao e uso real de uma aplicacao full stack com fluxo de e-commerce.
+
+## Link em Produção
+https://fastfitstore.vercel.app/
