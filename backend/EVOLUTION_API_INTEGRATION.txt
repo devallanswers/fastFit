@@ -1,0 +1,250 @@
+/*
+ * GUIA DE INTEGRAÇÃO EVOLUTION API - WhatsApp
+ * ============================================
+ *
+ * Este arquivo documenta como usar a integração com Evolution API
+ * para enviar notificações de status de pedido via WhatsApp.
+ */
+
+// ============ 1. VARIÁVEIS DE AMBIENTE ============
+/*
+ * Configure as seguintes variáveis de ambiente (via .env, docker-compose, ou sistema):
+ *
+ * EVOLUTION_API_URL=http://localhost:3000
+ * EVOLUTION_API_KEY=sua_chave_de_api_aqui
+ * EVOLUTION_INSTANCE=fastfit
+ * EVOLUTION_API_ENABLED=true
+ */
+
+// ============ 2. INJECTING E USANDO O SERVIÇO ============
+/*
+ * Em OrderService ou qualquer serviço que atualiza pedidos:
+ */
+
+@Service
+public class OrderService {
+
+    private final OrderRepository orderRepository;
+    private final WhatsAppNotificationExamples whatsAppNotifications;
+
+    public OrderService(OrderRepository orderRepository, WhatsAppNotificationExamples whatsAppNotifications) {
+        this.orderRepository = orderRepository;
+        this.whatsAppNotifications = whatsAppNotifications;
+    }
+
+    // Atualizar status e notificar cliente
+    public void updateOrderStatus(Long orderId, Order.OrderStatus newStatus) {
+        Order order = orderRepository.findById(orderId)
+            .orElseThrow(() -> new OrderNotFoundException("Pedido não encontrado"));
+
+        order.setStatus(newStatus);
+        orderRepository.save(order);
+
+        // Enviar notificação baseada no novo status
+        switch (newStatus) {
+            case RECEIVED:
+                whatsAppNotifications.notifyOrderReceived(order);
+                break;
+            case IN_PREPARATION:
+                whatsAppNotifications.notifyOrderInPreparation(order);
+                break;
+            case READY:
+                whatsAppNotifications.notifyOrderReady(order);
+                break;
+            case FINISHED:
+                whatsAppNotifications.notifyOrderFinished(order);
+                break;
+            case CANCELED:
+                whatsAppNotifications.notifyOrderCancelled(order, "Motivo do cancelamento");
+                break;
+        }
+    }
+}
+
+// ============ 3. FLUXO DE STATUS DE PEDIDO ============
+/*
+ * Os pedidos passam pelos seguintes status:
+ *
+ * RECEIVED (Recebido)
+ * └─► Pedido foi criado e salvo no sistema
+ * └─► Mensagem: "✓ Pedido Recebido! Número: #123..."
+ *
+ * IN_PREPARATION (Em Preparação)
+ * └─► Pedido está sendo preparado na cozinha
+ * └─► Mensagem: "👨‍🍳 Seu Pedido Está em Preparação!..."
+ *
+ * READY (Pronto para Entrega/Retirada)
+ * └─► Pedido pronto e saiu para entrega
+ * └─► Mensagem: "📦 Seu Pedido Saiu para Entrega!..."
+ *
+ * FINISHED (Finalizado)
+ * └─► Pedido foi entregue ao cliente
+ * └─► Mensagem: "✅ Seu Pedido Foi Entregue!..."
+ *
+ * CANCELED (Cancelado)
+ * └─► Pedido foi cancelado (motivo informado)
+ * └─► Mensagem: "❌ Seu Pedido Foi Cancelado..."
+ */
+
+// ============ 4. SUPORTA CLIENTES LOGADOS E GUEST ============
+/*
+ * O sistema detecta automaticamente:
+ *
+ * Usuário logado:
+ * └─► Extrai número de: order.getUser().getPhone()
+ *
+ * Cliente guest (sem login):
+ * └─► Extrai número de: order.getGuestPhone()
+ *
+ * Exemplo de Order:
+ * {
+ *   "id": 123,
+ *   "user": { "name": "João", "phone": "5585999999999" },  // ou null
+ *   "guestName": "João Silva",      // ou null
+ *   "guestPhone": "5585999999999",  // ou null
+ *   "status": "RECEIVED",
+ *   "totalAmount": 150.50
+ * }
+ */
+
+// ============ 5. EXEMPLO COMPLETO EM CONTROLLER ============
+
+@RestController
+@RequestMapping("/api/orders")
+public class OrderController {
+
+    private final OrderService orderService;
+
+    public OrderController(OrderService orderService) {
+        this.orderService = orderService;
+    }
+
+    // Atualizar status de um pedido
+    @PutMapping("/{id}/status")
+    public ResponseEntity<?> updateOrderStatus(
+        @PathVariable Long id,
+        @RequestBody UpdateOrderStatusRequest request
+    ) {
+        orderService.updateOrderStatus(id, request.getStatus());
+        return ResponseEntity.ok("Status atualizado. Cliente notificado via WhatsApp.");
+    }
+}
+
+// Request:
+class UpdateOrderStatusRequest {
+    private Order.OrderStatus status;  // RECEIVED, IN_PREPARATION, READY, FINISHED, CANCELED
+    // getters/setters
+}
+
+// ============ 6. TRATAMENTO DE ERROS ============
+/*
+ * O WhatsAppService trata automaticamente:
+ * - Variáveis de ambiente faltando (apenas loga, não falha)
+ * - Números de telefone inválidos (rejeitados silenciosamente com log)
+ * - Erros de conexão com Evolution API (logados mas não derrubam a app)
+ * - Problemas de autenticação (401 - Verifique sua API Key)
+ * - Endpoints não encontrados (404 - Verifique EVOLUTION_API_URL)
+ *
+ * Se a notificação falhar, o STATUS DO PEDIDO CONTINUA SENDO ATUALIZADO.
+ * Apenas a mensagem WhatsApp não será enviada.
+ */
+
+// ============ 7. VERIFICAR CONFIGURAÇÃO ============
+/*
+ * Para debug, você pode usar:
+ */
+
+@GetMapping("/debug/whatsapp-config")
+public ResponseEntity<String> getWhatsAppConfig(WhatsAppService whatsAppService) {
+    return ResponseEntity.ok(whatsAppService.getConfigurationInfo());
+}
+
+// Saída esperada:
+/*
+[WhatsApp Configuration]
+Enabled: true
+Evolution API URL: http://localhost:3000
+Evolution Instance: fastfit
+API Key Configured: true
+*/
+
+// ============ 8. VARIÁVEIS DE AMBIENTE - EXEMPLO .env ============
+/*
+# .env ou docker-compose.yml ou system environment
+EVOLUTION_API_URL=http://evolution-api:3000
+EVOLUTION_API_KEY=sk_test_sua_chave_aqui
+EVOLUTION_INSTANCE=fastfit
+EVOLUTION_API_ENABLED=true
+*/
+
+// ============ 9. EXEMPLO DOCKER-COMPOSE ============
+/*
+version: '3.8'
+
+services:
+  evolution-api:
+    image: atendai/evolution-api:latest
+    ports:
+      - "3000:3000"
+    environment:
+      - DATABASE_URL=postgresql://user:pass@postgres:5432/evolution
+      - API_KEY=sk_test_sua_chave_aqui
+
+  fastfit-backend:
+    build: .
+    environment:
+      - EVOLUTION_API_URL=http://evolution-api:3000
+      - EVOLUTION_API_KEY=sk_test_sua_chave_aqui
+      - EVOLUTION_INSTANCE=fastfit
+      - EVOLUTION_API_ENABLED=true
+    depends_on:
+      - evolution-api
+      - postgres
+*/
+
+// ============ 10. POSSÍVEIS ERROS E SOLUÇÕES ============
+/*
+ * Error: "[WhatsApp] Evolution API URL não configurada"
+ * Solução: Defina a variável de ambiente EVOLUTION_API_URL
+ *
+ * Error: "[WhatsApp] Evolution API Key não configurada"
+ * Solução: Defina a variável de ambiente EVOLUTION_API_KEY
+ *
+ * Error: "[WhatsApp] Erro de autenticação (401)"
+ * Solução: Verifique se a EVOLUTION_API_KEY está correta
+ *
+ * Error: "[WhatsApp] Erro (404) - Endpoint não encontrado"
+ * Solução: Verifique se EVOLUTION_API_URL está correto
+ *          Exemplo correto: http://localhost:3000 (SEM /message/sendText no fim)
+ *
+ * Error: "[WhatsApp] Número de telefone inválido"
+ * Solução: Use o formato: 5585999999999 ou deixe que o serviço normalize
+ */
+
+// ============ 11. TIMEOUT E CONFIGURAÇÃO DE REDE ============
+/*
+ * O RestTemplate foi configurado com timeouts seguros:
+ * - Connection Timeout: 5 segundos
+ * - Read Timeout: 10 segundos
+ *
+ * Se precisa ajustar, modifique a classe WebConfig:
+ *
+ * @Bean
+ * public RestTemplate restTemplate(RestTemplateBuilder builder) {
+ *     return builder
+ *             .setConnectTimeout(Duration.ofSeconds(15))  // Aumentar
+ *             .setReadTimeout(Duration.ofSeconds(20))
+ *             .requestFactory(...)
+ *             .build();
+ * }
+ */
+
+// ============ 12. STATUS DO PEDIDO MAPEADO PARA MENSAGENS ============
+/*
+ * RECEIVED      → "✓ Pedido Recebido!"
+ * IN_PREPARATION → "👨‍🍳 Seu Pedido Está em Preparação!"
+ * READY         → "📦 Seu Pedido Saiu para Entrega!"
+ * FINISHED      → "✅ Seu Pedido Foi Entregue!"
+ * CANCELED      → "❌ Seu Pedido Foi Cancelado"
+ */
+

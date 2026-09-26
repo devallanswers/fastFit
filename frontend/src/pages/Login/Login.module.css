@@ -1,0 +1,368 @@
+/* ─── Brand ───────────────────────────────────────── */
+/* verde: #9ceb2b  |  rosa: #d40638  |  laranja: #ff8200 */
+
+/* ─── Page wrapper ────────────────────────────────── */
+.page {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: #f0fdf0;
+  overflow-x: hidden;
+}
+
+/* ─── Hero (topo colorido) ────────────────────────── */
+.hero {
+  position: relative;
+  min-height: 240px;
+  background: linear-gradient(145deg, #1a6b3c 0%, #2a9d5c 50%, #9ceb2b 100%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 48px 24px 64px;
+  overflow: hidden;
+}
+
+.heroBlobA {
+  position: absolute;
+  width: 200px;
+  height: 200px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.10);
+  top: -60px;
+  right: -40px;
+}
+
+.heroBlobB {
+  position: absolute;
+  width: 140px;
+  height: 140px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.07);
+  bottom: 20px;
+  left: -30px;
+}
+
+.heroLogo {
+  height: 56px;
+  width: auto;
+  filter: drop-shadow(0 4px 16px rgba(0,0,0,0.25)) brightness(0) invert(1);
+  position: relative;
+  z-index: 1;
+}
+
+.heroText {
+  text-align: center;
+  position: relative;
+  z-index: 1;
+}
+
+.heroHello {
+  font-family: 'Poppins', sans-serif;
+  font-size: 32px;
+  font-weight: 800;
+  color: #fff;
+  margin: 0;
+  line-height: 1.1;
+  letter-spacing: -0.5px;
+}
+
+.heroSub {
+  font-family: 'Nunito', sans-serif;
+  font-size: 15px;
+  color: rgba(255,255,255,0.85);
+  margin: 0;
+  font-weight: 600;
+}
+
+/* ─── Card branco flutuante ───────────────────────── */
+.card {
+  background: #ffffff;
+  border-radius: 28px 28px 0 0;
+  padding: 32px 24px 48px;
+  flex: 1;
+  margin-top: -28px;
+  box-shadow: 0 -4px 32px rgba(0,0,0,0.08);
+  position: relative;
+  z-index: 2;
+  animation: slideUp 0.35s cubic-bezier(0.22,1,0.36,1) both;
+}
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(24px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ─── Back row ────────────────────────────────────── */
+.backRow { margin-bottom: 12px; }
+
+.backLink {
+  font-size: 13px;
+  font-weight: 700;
+  color: #64748B;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  transition: color 0.15s;
+}
+.backLink:hover { color: #1a6b3c; }
+
+/* ─── Title ───────────────────────────────────────── */
+.title {
+  font-family: 'Poppins', sans-serif;
+  font-size: 26px;
+  font-weight: 800;
+  color: #1a2e1a;
+  margin: 0 0 22px;
+  letter-spacing: -0.3px;
+}
+
+/* ─── Form ────────────────────────────────────────── */
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* ─── Input row ───────────────────────────────────── */
+.inputWrap {
+  display: flex;
+  align-items: center;
+  background: #f4f8f4;
+  border: 1.5px solid #e2ece2;
+  border-radius: 50px;
+  padding: 0 16px;
+  transition: border-color 0.18s, box-shadow 0.18s, background 0.18s;
+}
+
+.inputWrap:focus-within {
+  border-color: #9ceb2b;
+  box-shadow: 0 0 0 3px rgba(156,235,43,0.15);
+  background: #fff;
+}
+
+.inputIcon {
+  color: #94a3b8;
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+  margin-right: 10px;
+}
+
+.input {
+  flex: 1;
+  border: none;
+  background: transparent;
+  padding: 14px 0;
+  font-size: 15px;
+  font-family: 'Nunito', sans-serif;
+  color: #1e293b;
+  outline: none;
+}
+.input::placeholder { color: #94a3b8; }
+
+/* ─── Forgot row ──────────────────────────────────── */
+.forgotRow {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: -2px;
+}
+
+.forgot {
+  font-size: 13px;
+  font-weight: 700;
+  color: #ff8200;
+  text-decoration: none;
+  transition: color 0.15s;
+}
+.forgot:hover { color: #cc6800; }
+
+/* ─── Primary button ──────────────────────────────── */
+.btn {
+  background: #1a6b3c;
+  color: #ffffff;
+  font-family: 'Poppins', sans-serif;
+  font-size: 16px;
+  font-weight: 700;
+  padding: 16px;
+  border-radius: 50px;
+  border: none;
+  cursor: pointer;
+  margin-top: 6px;
+  width: 100%;
+  letter-spacing: 0.3px;
+  transition: all 0.2s cubic-bezier(0.22,1,0.36,1);
+  box-shadow: 0 4px 20px rgba(26,107,60,0.35);
+}
+
+.btn:hover:not(:disabled) {
+  background: #9ceb2b;
+  color: #0d2200;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 28px rgba(156,235,43,0.40);
+}
+
+.btn:active:not(:disabled) {
+  transform: translateY(0);
+  box-shadow: 0 3px 12px rgba(26,107,60,0.25);
+}
+
+.btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* ─── Footer ──────────────────────────────────────── */
+.footer {
+  text-align: center;
+  font-size: 14px;
+  color: #64748b;
+  margin-top: 20px;
+  font-weight: 600;
+}
+
+.footer a {
+  color: #d40638;
+  font-weight: 800;
+  text-decoration: none;
+  transition: color 0.15s;
+}
+.footer a:hover { color: #a80028; }
+
+/* ─── Alerts ──────────────────────────────────────── */
+.error {
+  background: #fff0f0;
+  border: 1.5px solid #fecaca;
+  color: #dc2626;
+  font-size: 13px;
+  font-weight: 600;
+  padding: 10px 14px;
+  border-radius: 14px;
+  margin-bottom: 4px;
+}
+
+.success {
+  background: #f0fdf4;
+  border: 1.5px solid #bbf7d0;
+  color: #16a34a;
+  font-size: 13px;
+  font-weight: 600;
+  padding: 10px 14px;
+  border-radius: 14px;
+  margin-bottom: 4px;
+}
+
+.info {
+  background: #fff7ed;
+  border: 1.5px solid #fed7aa;
+  color: #ea580c;
+  font-size: 13px;
+  padding: 10px 14px;
+  border-radius: 14px;
+  margin-bottom: 4px;
+  line-height: 1.5;
+}
+
+/* ─── Eye button ──────────────────────────────────── */
+.eyeBtn {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 2px;
+  line-height: 1;
+  color: #94a3b8;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: color 0.15s;
+}
+.eyeBtn:hover { color: #1a6b3c; }
+
+/* ─── Legacy stubs (ForgotPassword / ResetPassword / VerifyEmail) ─── */
+.passwordWrap { display: contents; }
+.logo { display: none; }
+.logoImg { display: none; }
+.field { display: contents; }
+
+/* ─── Divisor "ou entre com" ──────────────────────── */
+.divider {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 20px 0 16px;
+}
+
+.dividerLine {
+  flex: 1;
+  height: 1px;
+  background: #e8f0e8;
+}
+
+.dividerText {
+  font-size: 12px;
+  font-weight: 700;
+  color: #94a3b8;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  white-space: nowrap;
+}
+
+/* ─── Botões sociais ──────────────────────────────── */
+.socialRow {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 10px;
+  margin-bottom: 4px;
+}
+
+.socialBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px 16px;
+  border-radius: 50px;
+  border: 1.5px solid #e2ece2;
+  background: #f4f8f4;
+  font-family: 'Poppins', sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  color: #1e293b;
+  cursor: pointer;
+  transition: all 0.18s ease;
+}
+
+.socialBtn:hover:not(:disabled) {
+  border-color: #9ceb2b;
+  background: #ffffff;
+  box-shadow: 0 2px 12px rgba(156, 235, 43, 0.20);
+  transform: translateY(-1px);
+}
+
+.socialBtn:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.socialBtn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Spinner para loading dos botões sociais */
+.socialSpinner {
+  width: 18px;
+  height: 18px;
+  border: 2px solid #e2ece2;
+  border-top-color: #1a6b3c;
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+  display: inline-block;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}

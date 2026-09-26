@@ -1,0 +1,143 @@
+.page { min-height: 100vh; background: var(--background); }
+
+.header {
+  padding: 20px 16px 12px;
+  background: var(--white);
+  border-bottom: 1px solid var(--gray-light);
+}
+.title { font-family: var(--font-heading); font-size: 22px; font-weight: 800; color: var(--text-primary); }
+.subtitle { font-size: 13px; color: var(--text-secondary); font-weight: 600; margin-top: 3px; }
+.content { padding: 16px; padding-bottom: 100px; }
+
+.pkgCard {
+  background: var(--white); border-radius: var(--radius-lg); overflow: hidden;
+  box-shadow: var(--shadow-sm); margin-bottom: 16px; border: 2px solid transparent;
+}
+.pkgImageWrap { position: relative; height: 160px; overflow: hidden; background: var(--gray-light); }
+.pkgImage { width: 100%; height: 100%; object-fit: cover; }
+.pkgImagePlaceholder {
+  width: 100%; height: 100%; display: flex; align-items: center; justify-content: center;
+  background: linear-gradient(135deg, #4CAF50, #2E7D5B);
+}
+.pkgBody { padding: 16px; }
+.pkgName { font-family: var(--font-heading); font-size: 18px; font-weight: 800; color: var(--text-primary); margin-bottom: 4px; }
+.pkgDesc { font-size: 13px; color: var(--text-secondary); font-weight: 600; line-height: 1.4; margin-bottom: 10px; }
+.pkgSlots { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 14px; }
+.pkgSlotChip {
+  background: #E8F5EE; color: #2E7D5B; font-size: 12px; font-weight: 700;
+  padding: 4px 10px; border-radius: 20px; border: 1px solid rgba(46,125,91,0.2);
+}
+.pkgFooter { display: flex; align-items: center; justify-content: space-between; }
+.pkgPrice { font-family: var(--font-heading); font-size: 22px; font-weight: 800; color: var(--primary); }
+.pkgBtn {
+  background: var(--primary); color: white; font-family: var(--font-heading);
+  font-size: 14px; font-weight: 700; padding: 10px 20px;
+  border-radius: var(--radius-md); border: none; cursor: pointer;
+}
+
+.overlay {
+  position: fixed; inset: 0; z-index: 100; background: rgba(0,0,0,0.55);
+  display: flex; align-items: flex-end; animation: fadeIn 0.2s ease;
+}
+.modal {
+  background: var(--white); border-radius: 24px 24px 0 0; width: 100%;
+  max-height: 90vh; display: flex; flex-direction: column;
+  animation: slideUp 0.3s ease; overflow: hidden;
+}
+.modalHeader {
+  padding: 20px 20px 14px; border-bottom: 1px solid var(--gray-light);
+  display: flex; justify-content: space-between; align-items: flex-start; flex-shrink: 0;
+}
+.modalTitleWrap { flex: 1; min-width: 0; }
+.modalTitle { font-family: var(--font-heading); font-size: 18px; font-weight: 800; color: var(--text-primary); }
+.modalSubtitle { font-size: 13px; color: var(--text-secondary); font-weight: 600; margin-top: 2px; }
+.modalPrice { font-size: 20px; font-weight: 800; color: var(--primary); margin-top: 4px; }
+.modalCloseBtn {
+  background: var(--background); border: none; border-radius: 50%; width: 32px; height: 32px;
+  display: flex; align-items: center; justify-content: center; cursor: pointer; flex-shrink: 0; margin-left: 12px;
+}
+.modalBody { overflow-y: auto; padding: 16px 20px; flex: 1; }
+
+.slotSection { margin-bottom: 24px; }
+.slotHeader { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
+.slotName { font-family: var(--font-heading); font-size: 15px; font-weight: 800; color: var(--text-primary); }
+.slotProgress {
+  font-size: 12px; font-weight: 700; padding: 3px 10px;
+  border-radius: 12px; background: var(--gray-light); color: var(--text-secondary);
+}
+.slotProgressDone { background: #E8F5EE; color: #2E7D5B; }
+
+.productGrid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; }
+.productOption {
+  background: var(--background); border: 2px solid var(--gray-light);
+  border-radius: var(--radius-md); padding: 10px; cursor: pointer;
+  transition: all 0.15s ease; display: flex; flex-direction: column;
+  align-items: center; gap: 6px; text-align: center; position: relative;
+}
+.productOptionSelected { border-color: var(--primary); background: #E8F5EE; }
+.productOptionImg {
+  width: 64px; height: 64px; border-radius: 10px; object-fit: cover;
+  background: var(--gray-light); flex-shrink: 0;
+}
+.productOptionImgPlaceholder {
+  width: 64px; height: 64px; border-radius: 10px;
+  background: var(--gray-light); display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+}
+.productOptionName { font-size: 12px; font-weight: 700; color: var(--text-primary); line-height: 1.3; }
+.productOptionCount {
+  position: absolute; top: 6px; right: 6px;
+  font-size: 11px; font-weight: 800; color: white;
+  background: var(--primary); border-radius: 10px; padding: 1px 7px; min-width: 20px; text-align: center;
+}
+.productOptionDisabled { opacity: 0.35; cursor: not-allowed; pointer-events: none; }
+
+.modalFooter { padding: 16px 20px; border-top: 1px solid var(--gray-light); flex-shrink: 0; }
+.progressBar {
+  height: 4px; background: var(--gray-light); border-radius: 2px; margin-bottom: 12px; overflow: hidden;
+}
+.progressFill { height: 100%; background: var(--primary); border-radius: 2px; transition: width 0.3s ease; }
+.progressText { font-size: 12px; color: var(--text-secondary); font-weight: 600; margin-bottom: 10px; text-align: center; }
+.addToCartBtn {
+  width: 100%; padding: 16px; background: var(--primary); color: white;
+  font-family: var(--font-heading); font-size: 16px; font-weight: 800;
+  border: none; border-radius: var(--radius-md); cursor: pointer;
+}
+.addToCartBtn:disabled { background: #CBD5E1; cursor: not-allowed; }
+
+.skeleton {
+  height: 280px;
+  background: linear-gradient(90deg, var(--gray-light) 25%, #f0f0f0 50%, var(--gray-light) 75%);
+  background-size: 200% 100%; animation: shimmer 1.4s infinite;
+  border-radius: var(--radius-lg); margin-bottom: 16px;
+}
+
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+@keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
+@keyframes shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
+
+/* ── Stepper buttons on product cards ─────────────────────────── */
+.productOptionInner {
+  display: flex; flex-direction: column; align-items: center;
+  gap: 6px; width: 100%; pointer-events: none;
+}
+.productStepper {
+  display: flex; align-items: center; justify-content: center;
+  gap: 0; margin-top: 2px; pointer-events: all;
+}
+.stepperBtn {
+  width: 26px; height: 26px; border-radius: 50%;
+  border: 2px solid var(--primary); background: white;
+  color: var(--primary); font-size: 16px; font-weight: 900;
+  cursor: pointer; display: flex; align-items: center; justify-content: center;
+  line-height: 1; transition: all 0.12s ease; flex-shrink: 0;
+}
+.stepperBtn:hover:not(:disabled) { background: var(--primary); color: white; }
+.stepperBtn:disabled { opacity: 0.3; cursor: not-allowed; }
+.stepperCount {
+  min-width: 28px; text-align: center;
+  font-size: 15px; font-weight: 800; color: var(--text-primary);
+}
+/* When count > 0, highlight card differently */
+.productOptionActive {
+  border-color: var(--primary); background: #E8F5EE;
+}

@@ -1,0 +1,124 @@
+.item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: var(--white);
+  border-radius: var(--radius-md);
+  padding: 12px;
+  box-shadow: var(--shadow-sm);
+  animation: slideIn 0.2s ease both;
+}
+
+.image {
+  width: 64px;
+  height: 64px;
+  border-radius: var(--radius-sm);
+  object-fit: cover;
+  flex-shrink: 0;
+}
+
+.info {
+  flex: 1;
+  min-width: 0;
+}
+
+.name {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 4px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.price {
+  font-size: 13px;
+  font-weight: 800;
+  color: var(--primary);
+}
+
+.controls {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.btn {
+  width: 30px;
+  height: 30px;
+  border-radius: 8px;
+  background: var(--background);
+  color: var(--text-primary);
+  font-size: 16px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.15s ease;
+}
+
+.btn:active {
+  transform: scale(0.88);
+  background: var(--gray-light);
+}
+
+.btnAdd {
+  background: var(--primary);
+  color: white;
+}
+
+.qty {
+  font-size: 15px;
+  font-weight: 800;
+  color: var(--text-primary);
+  min-width: 20px;
+  text-align: center;
+}
+
+.unitPrice {
+  font-size: 11px;
+  color: var(--text-secondary);
+  font-weight: 600;
+  margin-top: 2px;
+  display: block;
+}
+
+/* Package item */
+.pkgImageWrap { position: relative; flex-shrink: 0; }
+.pkgPlaceholder {
+  width: 64px; height: 64px; border-radius: 12px;
+  background: #E8F5EE; display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+.pkgBadge {
+  position: absolute; bottom: -4px; left: 50%; transform: translateX(-50%);
+  background: #2E7D5B; color: white; font-size: 9px; font-weight: 800;
+  padding: 2px 6px; border-radius: 8px; white-space: nowrap;
+  display: flex; align-items: center;
+}
+
+/* ── Detalhes do pacote ─────────────────────────────── */
+.pkgDetails {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin: 4px 0 6px;
+}
+
+.pkgSlot {
+  font-size: 11px;
+  color: var(--text-secondary, #64748B);
+  line-height: 1.4;
+}
+
+.pkgSlotName {
+  font-weight: 700;
+  color: var(--primary, #2E7D5B);
+  margin-right: 4px;
+}
+
+.pkgSlotItems {
+  color: var(--text, #334155);
+}

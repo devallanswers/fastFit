@@ -1,0 +1,175 @@
+.page { min-height: 100vh; background: var(--background); }
+
+.header {
+  padding: 16px 16px 12px;
+  background: var(--white);
+  border-bottom: 1px solid var(--gray-light);
+  display: flex; align-items: center; gap: 12px;
+}
+.backBtn { background: none; border: none; font-size: 16px; font-weight: 700; color: var(--primary); cursor: pointer; font-family: var(--font-body); padding: 0; }
+.title { font-family: var(--font-heading); font-size: 20px; font-weight: 800; color: var(--text-primary); }
+
+.content { padding: 20px 16px 100px; display: flex; flex-direction: column; gap: 16px; }
+
+.emptyState { display: flex; flex-direction: column; align-items: center; padding: 60px 20px; gap: 8px; text-align: center; }
+.emptyIcon { font-size: 52px; }
+.emptyTitle { font-family: var(--font-heading); font-size: 18px; font-weight: 800; color: var(--text-primary); }
+.emptyText { font-size: 14px; color: var(--text-secondary); }
+
+.avatarSection { display: flex; flex-direction: column; align-items: center; gap: 6px; padding: 24px; background: var(--white); border-radius: var(--radius-xl); box-shadow: var(--shadow-sm); }
+.avatar { width: 80px; height: 80px; border-radius: 50%; background: linear-gradient(135deg, var(--primary), var(--primary-light)); color: white; font-family: var(--font-heading); font-size: 28px; font-weight: 800; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 16px rgba(46,125,91,0.3); }
+.name { font-family: var(--font-heading); font-size: 20px; font-weight: 800; color: var(--text-primary); }
+.email { font-size: 13px; color: var(--text-secondary); }
+.phone { font-size: 14px; color: var(--text-secondary); font-weight: 600; }
+.adminBadge { background: #FEF3C7; color: #92400E; font-size: 12px; font-weight: 700; padding: 4px 12px; border-radius: 20px; }
+
+.statsRow { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+.statBox { background: var(--white); border-radius: var(--radius-md); padding: 14px 8px; text-align: center; box-shadow: var(--shadow-sm); display: flex; flex-direction: column; gap: 4px; }
+.statNum { font-family: var(--font-heading); font-size: 16px; font-weight: 800; color: var(--primary); }
+.statLbl { font-size: 11px; color: var(--text-secondary); font-weight: 600; }
+
+.menu { background: var(--white); border-radius: var(--radius-xl); box-shadow: var(--shadow-sm); overflow: hidden; }
+.menuItem { display: flex; align-items: center; gap: 14px; padding: 16px 20px; background: transparent; border: none; border-bottom: 1px solid var(--gray-light); width: 100%; text-align: left; cursor: pointer; font-family: var(--font-body); transition: background 0.15s; }
+.menuItem:last-child { border-bottom: none; }
+.menuItem:active { background: var(--background); }
+.menuIcon { font-size: 22px; width: 28px; text-align: center; flex-shrink: 0; }
+.menuInfo { flex: 1; display: flex; flex-direction: column; gap: 2px; }
+.menuLabel { font-size: 15px; font-weight: 700; color: var(--text-primary); }
+.menuSub { font-size: 12px; color: var(--text-secondary); }
+.menuArrow { font-size: 20px; color: var(--text-secondary); }
+
+.logoutBtn { background: #FEE2E2; color: var(--red); font-size: 15px; font-weight: 700; padding: 15px; border-radius: var(--radius-md); border: none; width: 100%; cursor: pointer; font-family: var(--font-body); }
+
+/* Forms */
+.formCard { background: var(--white); border-radius: var(--radius-xl); padding: 20px; box-shadow: var(--shadow-sm); display: flex; flex-direction: column; gap: 14px; }
+.formGroup { display: flex; flex-direction: column; gap: 6px; }
+.formRow { display: flex; gap: 10px; }
+.label { font-size: 11px; font-weight: 800; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.05em; }
+.input { border: 2px solid var(--gray-light); border-radius: var(--radius-sm); padding: 11px 14px; font-size: 14px; font-family: var(--font-body); color: var(--text-primary); outline: none; transition: border-color 0.15s; background: white; width: 100%; }
+.input:focus { border-color: var(--primary); }
+.pwdWrap { position: relative; display: flex; align-items: center; }
+.pwdWrap .input { padding-right: 44px; }
+.eyeBtn { position: absolute; right: 12px; background: transparent; border: none; cursor: pointer; font-size: 18px; color: #9CA3AF; }
+.primaryBtn { width: 100%; background: var(--primary); color: white; font-family: var(--font-heading); font-size: 15px; font-weight: 700; padding: 14px; border-radius: var(--radius-md); border: none; cursor: pointer; transition: all 0.15s; }
+.primaryBtn:disabled { opacity: 0.6; cursor: not-allowed; }
+.successBox { background: #D1FAE5; color: #059669; font-size: 13px; font-weight: 700; padding: 10px 14px; border-radius: var(--radius-sm); }
+.errorBox { background: #FEE2E2; color: var(--red); font-size: 13px; font-weight: 700; padding: 10px 14px; border-radius: var(--radius-sm); }
+
+/* Addresses */
+.addBtn { background: var(--primary); color: white; font-size: 14px; font-weight: 700; padding: 12px; border-radius: var(--radius-md); border: none; cursor: pointer; font-family: var(--font-body); }
+.addrList { display: flex; flex-direction: column; gap: 12px; }
+.addrCard { background: var(--white); border-radius: var(--radius-lg); padding: 16px; box-shadow: var(--shadow-sm); }
+.addrTop { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; }
+.addrLabel { font-size: 15px; font-weight: 800; color: var(--text-primary); }
+.defaultBadge { font-size: 11px; background: var(--primary-bg); color: var(--primary); padding: 2px 8px; border-radius: 10px; font-weight: 700; }
+.addrText { font-size: 13px; color: var(--text-secondary); line-height: 1.5; }
+.addrActions { display: flex; gap: 8px; margin-top: 12px; flex-wrap: wrap; }
+.addrActionBtn { font-size: 12px; font-weight: 700; padding: 6px 12px; border-radius: 8px; border: 1.5px solid var(--gray-light); background: var(--background); color: var(--text-secondary); cursor: pointer; font-family: var(--font-body); }
+.addrDanger { color: var(--red); border-color: #FECACA; background: #FEF2F2; }
+.limitNote { font-size: 13px; color: var(--text-secondary); text-align: center; font-weight: 600; }
+
+/* ── Avatar picker ───────────────────────────────────────── */
+.avatarBtn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.avatarImg {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  object-fit: cover;
+  box-shadow: 0 4px 16px rgba(46,125,91,0.25);
+  border: 3px solid white;
+}
+
+.avatarEditBadge {
+  position: absolute;
+  bottom: 0;
+  right: -4px;
+  background: rgb(24, 209, 27);
+  border: 2px solid var(--gray-light);
+  border-radius: 50%;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  box-shadow: var(--shadow-sm);
+}
+
+.avatarPicker {
+  width: 100%;
+  margin-top: 12px;
+  animation: fadeInUp 0.2s ease both;
+}
+
+.avatarPickerTitle {
+  font-size: 11px;
+  font-weight: 800;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 10px;
+  text-align: center;
+}
+
+.avatarGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+}
+
+.avatarOption {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 10px 4px;
+  border-radius: var(--radius-sm);
+  border: 2px solid var(--gray-light);
+  background: var(--background);
+  cursor: pointer;
+  font-family: var(--font-body);
+  transition: all 0.15s ease;
+}
+
+.avatarOptionActive {
+  border-color: var(--primary);
+  background: var(--primary-bg);
+}
+
+.avatarOptionImg {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.avatarOptionInitials {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--primary), var(--primary-light));
+  color: white;
+  font-size: 12px;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-heading);
+}
+
+.avatarOptionLabel {
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--text-secondary);
+}
+
+.avatarOptionActive .avatarOptionLabel { color: var(--primary); }

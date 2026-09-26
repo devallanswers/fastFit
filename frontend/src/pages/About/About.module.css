@@ -1,0 +1,226 @@
+.page {
+  min-height: 100vh;
+  background: var(--background);
+}
+
+.header {
+  padding: 20px 16px 12px;
+  background: var(--white);
+  border-bottom: 1px solid var(--gray-light);
+}
+
+.title {
+  font-family: var(--font-heading);
+  font-size: 22px;
+  font-weight: 800;
+  color: var(--text-primary);
+}
+
+.content {
+  padding: 20px 16px 100px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.hero {
+  background: linear-gradient(135deg, #2E7D5B 0%, #1a5c3e 100%);
+  border-radius: var(--radius-xl);
+  padding: 28px 24px;
+  text-align: center;
+  animation: fadeInUp 0.4s ease both;
+}
+
+.heroIllustration {
+  position: relative;
+  display: inline-block;
+  margin-bottom: 16px;
+}
+
+.mainEmoji {
+  font-size: 64px;
+  display: block;
+  filter: drop-shadow(0 4px 12px rgba(0,0,0,0.2));
+  animation: pulse 3s ease infinite;
+}
+
+.deco1, .deco2, .deco3 {
+  position: absolute;
+  font-size: 24px;
+}
+
+.deco1 { top: 0; left: -20px; animation: pulse 3s 0.5s ease infinite; }
+.deco2 { top: 0; right: -20px; animation: pulse 3s 1s ease infinite; }
+.deco3 { bottom: 0; right: -10px; animation: pulse 3s 1.5s ease infinite; }
+
+.heroTitle {
+  font-family: var(--font-heading);
+  font-size: 22px;
+  font-weight: 800;
+  color: white;
+  margin-bottom: 10px;
+}
+
+.heroText {
+  font-size: 14px;
+  color: rgba(255,255,255,0.85);
+  line-height: 1.6;
+}
+
+.card {
+  background: var(--white);
+  border-radius: var(--radius-lg);
+  padding: 20px;
+  box-shadow: var(--shadow-sm);
+  animation: fadeInUp 0.4s ease both;
+}
+
+.cardTitle {
+  font-family: var(--font-heading);
+  font-size: 16px;
+  font-weight: 800;
+  color: var(--text-primary);
+  margin-bottom: 10px;
+}
+
+.cardText {
+  font-size: 14px;
+  color: var(--text-secondary);
+  line-height: 1.7;
+}
+
+.stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  animation: fadeInUp 0.4s ease both;
+}
+
+.stat {
+  background: var(--white);
+  border-radius: var(--radius-md);
+  padding: 16px 8px;
+  text-align: center;
+  box-shadow: var(--shadow-sm);
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.statValue {
+  font-family: var(--font-heading);
+  font-size: 20px;
+  font-weight: 800;
+  color: var(--primary);
+}
+
+.statLabel {
+  font-size: 11px;
+  color: var(--text-secondary);
+  font-weight: 600;
+}
+
+.contact {
+  background: var(--primary-bg);
+  border-radius: var(--radius-lg);
+  padding: 20px;
+  animation: fadeInUp 0.4s ease both;
+}
+
+.contactTitle {
+  font-family: var(--font-heading);
+  font-size: 15px;
+  font-weight: 800;
+  color: var(--primary);
+  margin-bottom: 12px;
+}
+
+.contactLinks {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.contactLink {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--text-primary);
+  display: block;
+}
+
+/* ── Social section ──────────────────────────────────────── */
+.socialSection {
+  animation: fadeInUp 0.4s ease 0.1s both;
+}
+
+.socialTitle {
+  font-family: var(--font-heading);
+  font-size: 15px;
+  font-weight: 800;
+  color: var(--text-primary);
+  margin-bottom: 12px;
+}
+
+.socialBtns {
+  display: flex;
+  gap: 10px;
+}
+
+.waBtn, .igBtn {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 16px;
+  border-radius: var(--radius-lg);
+  text-decoration: none;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.waBtn:active, .igBtn:active { transform: scale(0.97); }
+
+.waBtn {
+  background: linear-gradient(135deg, #25D366, #128C7E);
+  box-shadow: 0 4px 16px rgba(37,211,102,0.3);
+}
+
+.igBtn {
+  background: linear-gradient(135deg, #E1306C, #C13584, #833AB4);
+  box-shadow: 0 4px 16px rgba(193,53,132,0.3);
+}
+
+.socialBtnIcon { font-size: 26px; }
+
+.socialBtnText {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+
+.socialBtnLabel {
+  font-family: var(--font-heading);
+  font-size: 14px;
+  font-weight: 800;
+  color: white;
+}
+
+.socialBtnSub {
+  font-size: 11px;
+  color: rgba(255,255,255,0.8);
+  font-weight: 600;
+}
+
+/* ── Contact revamped ────────────────────────────────────── */
+.contactLink {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-primary);
+  text-decoration: none;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--gray-light);
+}
+.contactLink:last-child { border-bottom: none; }
+.contactIcon { font-size: 18px; }

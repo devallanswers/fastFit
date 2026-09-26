@@ -1,0 +1,250 @@
+# Fluxo de Integração - Evolution API WhatsApp (Notificações de Status)
+
+```
+┌─────────────────────────────────────────────────────────────────────┐
+│                    FFSTORE APPLICATION                              │
+└─────────────────────────────────────────────────────────────────────┘
+
+┌──────────────────────┐
+│  OrderController     │
+│  (REST API)          │
+└──────────┬───────────┘
+           │ PUT /api/orders/{id}/status
+           │ { "status": "IN_PREPARATION" }
+           ▼
+┌──────────────────────┐
+│  OrderService        │
+│  (Business Logic)    │
+└──────────┬───────────┘
+           │ updateOrderStatus(orderId, newStatus)
+           │ 1. Salva novo status no banco
+           │ 2. Chama notificações
+           ▼
+┌────────────────────────────────────────┐
+│  WhatsAppNotificationExamples          │
+│  (Orquestra notificações)              │
+└──────────┬─────────────────────────────┘
+           │ switch(status) → escolhe método
+           │
+           ├─► notifyOrderReceived(order)
+           ├─► notifyOrderInPreparation(order)
+           ├─► notifyOrderReady(order)
+           ├─► notifyOrderFinished(order)
+           └─► notifyOrderCancelled(order, reason)
+           │
+           ▼
+┌──────────────────────┐
+│ WhatsAppService      │
+│ (Serviço Central)    │
+└──────────┬───────────┘
+           │
+           ├─► Valida configuração
+           ├─► Formata número (E.164)
+           ├─► Constrói payload JSON
+           │
+           ▼
+┌──────────────────────┐
+│  RestTemplate Bean   │
+│  (WebConfig.java)    │
+└──────────┬───────────┘
+           │ HTTP POST com headers
+           ▼
+┌──────────────────────────────────────┐
+│  Evolution API                        │
+│  POST /message/sendText/{instance}    │
+│  Headers: apikey, Content-Type        │
+└──────────┬─────────────────────────┘
+           │ Body:
+           │ {
+           │   "number": "5585999999999",
+           │   "text": "✓ Pedido Recebido!..."
+           │ }
+           ▼
+┌──────────────────────────────────────┐
+│  WhatsApp Server                      │
+│  (Envio de Mensagem)                  │
+└──────────┬─────────────────────────┘
+           │ Entrega na fila
+           ▼
+┌──────────────────────────────────────┐
+│  Cliente WhatsApp                     │
+│  ✅ Mensagem Recebida                 │
+└──────────────────────────────────────┘
+```
+
+
+╔════════════════════════════════════════════════════════════════════╗
+║              FLUXO COMPLETO DE STATUS DE PEDIDO                    ║
+╠════════════════════════════════════════════════════════════════════╣
+║                                                                    ║
+║  [1] Cliente realiza pedido via API                               ║
+║      POST /api/orders → Status inicial: RECEIVED                  ║
+║      ✓ WhatsApp enviado: "Pedido Recebido!"                       ║
+║                                                                    ║
+║  [2] Cozinha começa a preparar                                    ║
+║      PUT /api/orders/{id}/status → Status: IN_PREPARATION        ║
+║      └─► OrderService.updateOrderStatus() chamado                ║
+║      ✓ WhatsApp enviado: "Em Preparação!"                        ║
+║                                                                    ║
+║  [3] Pedido pronto                                                ║
+║      PUT /api/orders/{id}/status → Status: READY                 ║
+║      └─► OrderService.updateOrderStatus() chamado                ║
+║      ✓ WhatsApp enviado: "Saiu para Entrega!"                    ║
+║                                                                    ║
+║  [4] Pedido entregue                                              ║
+║      PUT /api/orders/{id}/status → Status: FINISHED              ║
+║      └─► OrderService.updateOrderStatus() chamado                ║
+║      ✓ WhatsApp enviado: "Entregue!"                             ║
+║                                                                    ║
+║  OU                                                               ║
+║                                                                    ║
+║  [X] Pedido cancelado                                             ║
+║      PUT /api/orders/{id}/status → Status: CANCELED              ║
+║      └─► OrderService.updateOrderStatus() chamado                ║
+║      ✓ WhatsApp enviado: "Cancelado!"                            ║
+║                                                                    ║
+╚════════════════════════════════════════════════════════════════════╝
+
+
+╔════════════════════════════════════════════════════════════════════╗
+║            TRATAMENTO DE ERROS & COMPORTAMENTO                     ║
+╠════════════════════════════════════════════════════════════════════╣
+║                                                                    ║
+║  ⚠️  IMPORTANTE:                                                   ║
+║  O status do pedido SEMPRE é atualizado no banco.                 ║
+║  Se a notificação WhatsApp falhar, NÃO derruba a aplicação.       ║
+║  Apenas loga o erro e continua.                                   ║
+║                                                                    ║
+║  Cenários de erro:                                                ║
+║                                                                    ║
+║  1. evolution.api.enabled = false                                 ║
+║     └─► Log: [WhatsApp] Serviço desabilitado                     ║
+║     └─► Retorna silenciosamente (sem enviar)                     ║
+║                                                                    ║
+║  2. Variáveis de ambiente faltam                                  ║
+║     └─► Log: [WhatsApp] Evolution API URL não configurada        ║
+║     └─► Retorna (não falha a aplicação)                          ║
+║                                                                    ║
+║  3. Número de telefone inválido                                   ║
+║     └─► Log: [WhatsApp] Número de telefone inválido              ║
+║     └─► Retorna (filtra automaticamente)                         ║
+║                                                                    ║
+║  4. Erro 401 (API Key incorreta)                                  ║
+║     └─► Log: [WhatsApp] Erro de autenticação (401)                ║
+║     └─► Sugere: Verifique EVOLUTION_API_KEY                      ║
+║                                                                    ║
+║  5. Erro 404 (URL ou instância incorreta)                         ║
+║     └─► Log: [WhatsApp] Erro (404) - Endpoint não encontrado     ║
+║     └─► Sugere: Verifique EVOLUTION_API_URL                      ║
+║                                                                    ║
+║  6. Timeout ou erro de conexão                                    ║
+║     └─► Log: [WhatsApp] Erro de comunicação                       ║
+║     └─► RestTemplate com timeouts: 5s (conectar), 10s (ler)      ║
+║                                                                    ║
+║  ✓ Em TODOS os casos: Aplicação continua funcionando              ║
+║  ✓ Em TODOS os casos: Status do pedido foi atualizado             ║
+║                                                                    ║
+╚════════════════════════════════════════════════════════════════════╝
+
+
+╔════════════════════════════════════════════════════════════════════╗
+║              INTEGRAÇÃO EM ORDERSEVICE (CÓDIGO)                    ║
+╠════════════════════════════════════════════════════════════════════╣
+║                                                                    ║
+║  @Service                                                          ║
+║  public class OrderService {                                       ║
+║                                                                    ║
+║      private final OrderRepository orderRepository;                ║
+║      private final WhatsAppNotificationExamples whatsAppNotifications;║
+║                                                                    ║
+║      public void updateOrderStatus(Long orderId,                  ║
+║                                    Order.OrderStatus newStatus) { ║
+║          // 1. Busca pedido                                       ║
+║          Order order = orderRepository.findById(orderId)           ║
+║              .orElseThrow();                                       ║
+║                                                                    ║
+║          // 2. Atualiza status no banco                           ║
+║          order.setStatus(newStatus);                              ║
+║          orderRepository.save(order);                             ║
+║                                                                    ║
+║          // 3. Envia notificação WhatsApp                         ║
+║          switch (newStatus) {                                     ║
+║              case RECEIVED:                                        ║
+║                  whatsAppNotifications.notifyOrderReceived(order);║
+║                  break;                                            ║
+║              case IN_PREPARATION:                                 ║
+║                  whatsAppNotifications.notifyOrderInPreparation(order);║
+║                  break;                                            ║
+║              case READY:                                           ║
+║                  whatsAppNotifications.notifyOrderReady(order);    ║
+║                  break;                                            ║
+║              case FINISHED:                                        ║
+║                  whatsAppNotifications.notifyOrderFinished(order); ║
+║                  break;                                            ║
+║              case CANCELED:                                        ║
+║                  whatsAppNotifications.notifyOrderCancelled(order,║
+║                      "Motivo aqui");                              ║
+║                  break;                                            ║
+║          }                                                         ║
+║      }                                                             ║
+║  }                                                                 ║
+║                                                                    ║
+╚════════════════════════════════════════════════════════════════════╝
+
+
+╔════════════════════════════════════════════════════════════════════╗
+║              MENSAGENS ENVIADAS POR STATUS                         ║
+╠════════════════════════════════════════════════════════════════════╣
+║                                                                    ║
+║  RECEIVED                                                          ║
+║  └─► "✓ Pedido Recebido!"                                         ║
+║  └─► "Número: #123"                                               ║
+║  └─► "Total: R$ XXX,XX"                                           ║
+║  └─► "Acompanhe em: https://seu-site.com/pedido/123"              ║
+║                                                                    ║
+║  IN_PREPARATION                                                   ║
+║  └─► "👨‍🍳 Seu Pedido Está em Preparação!"                         ║
+║  └─► "Número: #123"                                               ║
+║  └─► "Você será notificado quando sair para entrega."             ║
+║                                                                    ║
+║  READY                                                             ║
+║  └─► "📦 Seu Pedido Saiu para Entrega!"                           ║
+║  └─► "Número: #123"                                               ║
+║  └─► "Acompanhe sua entrega: https://seu-site.com/pedido/123"     ║
+║                                                                    ║
+║  FINISHED                                                          ║
+║  └─► "✅ Seu Pedido Foi Entregue!"                                ║
+║  └─► "Número: #123"                                               ║
+║  └─► "Obrigado pela compra! Volte sempre."                        ║
+║                                                                    ║
+║  CANCELED                                                          ║
+║  └─► "❌ Seu Pedido Foi Cancelado"                                ║
+║  └─► "Número: #123"                                               ║
+║  └─► "Motivo: [motivo informado]"                                 ║
+║  └─► "Se tiver dúvidas, entre em contato conosco."                ║
+║                                                                    ║
+╚════════════════════════════════════════════════════════════════════╝
+
+
+╔════════════════════════════════════════════════════════════════════╗
+║              CHECKLIST DE OPERAÇÃO                                 ║
+╠════════════════════════════════════════════════════════════════════╣
+║                                                                    ║
+║  ✓ RestTemplate bean criado                                       ║
+║  ✓ WhatsAppService refatorado                                     ║
+║  ✓ WhatsAppNotificationExamples criado com 5 métodos              ║
+║  ✓ DTOs criados                                                   ║
+║  ✓ Configurações em application.properties                       ║
+║  ✓ Variáveis de ambiente documentadas                             ║
+║  ✓ Tratamento de erros implementado                              ║
+║  ✓ Logging configurado                                            ║
+║  ✓ Timeouts definidos (5s + 10s)                                 ║
+║                                                                    ║
+║  Próximos passos:                                                 ║
+║  □ Configurar variáveis de ambiente                              ║
+║  □ Integrar WhatsAppNotificationExamples em OrderService         ║
+║  □ Testar com Evolution API local ou produção                    ║
+║  □ Monitorar logs em produção                                     ║
+║  □ Adicionar testes unitários se necessário                      ║
+║                                                                    ║
+╚════════════════════════════════════════════════════════════════════╝
